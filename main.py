@@ -25,6 +25,13 @@ def output_dir():
 
 
 def main():
+    # Validate LINE before writing: the kit gate requires exactly one
+    # line of 1-139 characters, so reject an empty/whitespace-only line
+    # or any embedded line break up front instead of only asserting
+    # after the file is written.
+    assert LINE and not LINE.isspace(), "LINE must not be empty or whitespace-only"
+    assert "\n" not in LINE and "\r" not in LINE, "LINE must be a single line"
+    assert 1 <= len(LINE) <= 139, "LINE must be 1-139 characters"
     out = output_dir()
     os.makedirs(out, exist_ok=True)
     path = os.path.join(out, "entry.txt")
